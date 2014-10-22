@@ -129,8 +129,8 @@ public class SwitchButton extends CheckBox {
         mMaskWidth = mMask.getWidth();
         mMaskHeight = mMask.getHeight();
 
-        mBtnOffPos = mBtnWidth / 2;
-        mBtnOnPos = mMaskWidth - mBtnWidth / 2;
+        mBtnOnPos = mBtnWidth / 2;
+        mBtnOffPos = mMaskWidth - mBtnWidth / 2;
 
         mBtnPos = mChecked ? mBtnOnPos : mBtnOffPos;
         mRealPos = getRealPos(mBtnPos);
@@ -246,13 +246,13 @@ public class SwitchButton extends CheckBox {
             case MotionEvent.ACTION_MOVE:
                 float time = event.getEventTime() - event.getDownTime();
                 mBtnPos = mBtnInitPos + event.getX() - mFirstDownX;
-                if (mBtnPos >= mBtnOffPos) {
-                    mBtnPos = mBtnOffPos;
-                }
-                if (mBtnPos <= mBtnOnPos) {
+                if (mBtnPos >= mBtnOnPos) {
                     mBtnPos = mBtnOnPos;
                 }
-                mTurningOn = mBtnPos > (mBtnOffPos - mBtnOnPos) / 2 + mBtnOnPos;
+                if (mBtnPos <= mBtnOffPos) {
+                    mBtnPos = mBtnOffPos;
+                }
+                mTurningOn = mBtnPos > (mBtnOnPos - mBtnOffPos) / 2 + mBtnOffPos;
 
                 mRealPos = getRealPos(mBtnPos);
                 break;
@@ -267,7 +267,7 @@ public class SwitchButton extends CheckBox {
                         performClick();
                     }
                 } else {
-                    startAnimation(!mTurningOn);
+                    startAnimation(mTurningOn);
                 }
                 break;
         }
@@ -284,7 +284,7 @@ public class SwitchButton extends CheckBox {
 
     @Override
     public boolean performClick() {
-        startAnimation(!mChecked);
+        startAnimation(mChecked);
         return true;
     }
 
@@ -361,14 +361,14 @@ public class SwitchButton extends CheckBox {
     private void doAnimation() {
         mAnimationPosition += mAnimatedVelocity * FrameAnimationController.ANIMATION_FRAME_DURATION
                 / 1000;
-        if (mAnimationPosition <= mBtnOnPos) {
-            stopAnimation();
-            mAnimationPosition = mBtnOnPos;
-            setCheckedDelayed(true);
-        } else if (mAnimationPosition >= mBtnOffPos) {
+        if (mAnimationPosition <= mBtnOffPos) {
             stopAnimation();
             mAnimationPosition = mBtnOffPos;
             setCheckedDelayed(false);
+        } else if (mAnimationPosition >= mBtnOnPos) {
+            stopAnimation();
+            mAnimationPosition = mBtnOnPos;
+            setCheckedDelayed(true);
         }
         moveView(mAnimationPosition);
     }
