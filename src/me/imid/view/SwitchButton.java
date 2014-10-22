@@ -118,7 +118,7 @@ public class SwitchButton extends CheckBox {
         mTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
 
         // get Bitmap
-        mBottom = BitmapFactory.decodeResource(resources, R.drawable.bottom);
+        mBottom = BitmapFactory.decodeResource(resources, R.drawable.bottom_reverse);
         mBtnPressed = BitmapFactory.decodeResource(resources, R.drawable.btn_pressed);
         mBtnNormal = BitmapFactory.decodeResource(resources, R.drawable.btn_unpressed);
         mFrame = BitmapFactory.decodeResource(resources, R.drawable.frame);
@@ -267,7 +267,7 @@ public class SwitchButton extends CheckBox {
                         performClick();
                     }
                 } else {
-                    startAnimation(mTurningOn);
+                    startAnimation(!mTurningOn);
                 }
                 break;
         }
