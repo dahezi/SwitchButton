@@ -14,6 +14,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ViewConfiguration;
 import android.view.ViewParent;
@@ -182,12 +183,11 @@ public class SwitchButton extends CheckBox {
      */
     public void setChecked(boolean checked) {
 
+        mBtnPos = checked ? mBtnOnPos : mBtnOffPos;
+        mRealPos = getRealPos(mBtnPos);
+
         if (mChecked != checked) {
             mChecked = checked;
-
-            mBtnPos = checked ? mBtnOnPos : mBtnOffPos;
-            mRealPos = getRealPos(mBtnPos);
-            invalidate();
 
             // Avoid infinite recursions if setChecked() is called from a
             // listener
@@ -205,6 +205,7 @@ public class SwitchButton extends CheckBox {
 
             mBroadcasting = false;
         }
+        invalidate();
     }
 
     /**
@@ -254,6 +255,7 @@ public class SwitchButton extends CheckBox {
                 }
                 mTurningOn = mBtnPos > (mBtnOnPos - mBtnOffPos) / 2 + mBtnOffPos;
 
+                Log.d("cchen", mTurningOn + " " + mBtnPos);
                 mRealPos = getRealPos(mBtnPos);
                 break;
             case MotionEvent.ACTION_UP:
